@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "slime-chunk-viewer",
+	"version": "${version}",
+	"name": "Slime Chunk Viewer",
+	"description": "A simple mod that renders slime chunks on a server without having to use a seed.",
+	"authors": [
+		"jsco"
+	],
+	"contact": {
+		"sources": "https://github.com/jsco/slime-chunk-viewer"
+	},
+	"license": "LGPL-3.0-only",
+	"icon": "assets/scv/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"jsco.scv.SlimeChunkViewer"
+		],
+		"modmenu": [
+			"jsco.scv.SCVModMenuApiImpl"
+		]
+	},
+	"mixins": [
+		"slime-chunk-viewer.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.3",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

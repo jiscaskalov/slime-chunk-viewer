@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "jsco.scv.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "GameRendererMixin"
+  ],
+  "mixins": [
+    "ClientConnectionMixin"
+  ]
+}
