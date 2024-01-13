@@ -3,7 +3,7 @@
 	"id": "slime-chunk-viewer",
 	"version": "${version}",
 	"name": "Slime Chunk Viewer",
-	"description": "A simple mod that renders slime chunks on a server without having to use a seed.",
+	"description": "A simple mod that renders slime chunks on a server.",
 	"authors": [
 		"jsco"
 	],
