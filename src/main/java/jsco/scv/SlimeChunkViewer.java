@@ -48,6 +48,11 @@ public class SlimeChunkViewer implements ModInitializer {
             case "renderValid" -> config.renderOptions.renderValid;
             case "renderInvalid" -> config.renderOptions.renderInvalid;
             case "renderHeight" -> config.renderOptions.renderHeight;
+            case "renderColor" -> config.renderOptions.renderColor;
+            case "renderOpacity" -> config.renderOptions.renderOpacity;
+            case "renderOutline" -> config.renderOptions.renderOutline;
+            case "renderOutlineColor" -> config.renderOptions.renderOutlineColor;
+            case "renderOutlineOpacity" -> config.renderOptions.renderOutlineOpacity;
             default -> null;
         };
     }

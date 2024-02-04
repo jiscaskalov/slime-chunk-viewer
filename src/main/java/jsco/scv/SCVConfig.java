@@ -15,7 +15,12 @@ public class SCVConfig implements ConfigData {
     static class RenderOptions {
         boolean renderValid = true;
         boolean renderInvalid = false;
-        int renderHeight = 50;
+        int renderHeight = 75;
+        String renderColor = "48,255,255";
+        int renderOpacity = 115;
+        boolean renderOutline = true;
+        String renderOutlineColor = "96,255,66";
+        int renderOutlineOpacity = 255;
     }
 
     @Override

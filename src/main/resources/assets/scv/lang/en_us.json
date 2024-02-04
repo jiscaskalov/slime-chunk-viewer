@@ -5,5 +5,10 @@
   "text.autoconfig.slime-chunk-viewer.option.renderOptions": "Rendering Options",
   "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderValid": "Render valid slime chunks",
   "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderInvalid": "Render invalid slime chunks",
-  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderHeight": "Rendering height"
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderHeight": "Rendering height",
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderColor": "Color",
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderOpacity": "Opacity",
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderOutline": "Render outline",
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderOutlineColor": "Outline color",
+  "text.autoconfig.slime-chunk-viewer.option.renderOptions.renderOutlineOpacity": "Outline opacity"
 }

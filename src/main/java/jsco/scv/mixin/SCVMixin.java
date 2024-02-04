@@ -1,7 +1,6 @@
 package jsco.scv.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import jsco.scv.SCVConfig;
 import jsco.scv.SCVRenderer;
 import jsco.scv.SlimeChunkViewer;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -12,14 +11,12 @@ import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.ChunkDataS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ChunkPos;
 import org.lwjgl.opengl.GL11;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -30,10 +27,6 @@ import static jsco.scv.SlimeChunkViewer.client;
 
 @Mixin(GameRenderer.class)
 abstract class GameRendererMixin {
-    @Shadow public abstract void render(float tickDelta, long startTime, boolean tick);
-
-    @Shadow public abstract void renderWorld(float tickDelta, long limitTime, MatrixStack matrices);
-
     @Inject(
             at = @At(value = "FIELD",
                     target = "Lnet/minecraft/client/render/GameRenderer;renderHand:Z",
@@ -41,6 +34,7 @@ abstract class GameRendererMixin {
                     ordinal = 0),
             method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V")
     private void onRenderWorld(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci) {
+        if (!(boolean) SlimeChunkViewer.getConfigProperty("enabled")) return;
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
 
         client.getProfiler().push("slime-chunk-viewer" + "_render");
@@ -58,6 +52,7 @@ abstract class GameRendererMixin {
 abstract class ClientConnectionMixin {
     @Inject(method = "handlePacket", at = @At("HEAD"))
     private static void handlePacket(Packet<?> packet, PacketListener listener, CallbackInfo ci) {
+        if (!(boolean) SlimeChunkViewer.getConfigProperty("enabled")) return;
         if (packet instanceof ChunkDataS2CPacket chunk) {
             int xPosition = chunk.getChunkX();
             int zPosition = chunk.getChunkZ();
@@ -78,6 +73,6 @@ abstract class ClientConnectionMixin {
 abstract class ClientPlayNetworkHandlerMixin {
     @Inject(method = "onGameJoin", at = @At("TAIL"))
     private void onGameJoinTail(GameJoinS2CPacket packet, CallbackInfo info) {
-        if ((long) SlimeChunkViewer.getConfigProperty("seed") == 0) client.player.sendMessage(Text.of(Formatting.YELLOW + "[SCV] Set a seed in the config menu or by using /setseed!"));
+        if ((boolean) SlimeChunkViewer.getConfigProperty("enabled") && (long) SlimeChunkViewer.getConfigProperty("seed") == 0) client.player.sendMessage(Text.of(Formatting.YELLOW + "[SCV] Set a seed in the config menu or by using /setseed!"));
     }
 }

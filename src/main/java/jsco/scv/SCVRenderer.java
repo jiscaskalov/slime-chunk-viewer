@@ -79,7 +79,7 @@ public class SCVRenderer
     {
         setUp();
 
-        SCVRenderer.applyRegionalRenderOffset(matrixStack);
+        applyRegionalRenderOffset(matrixStack);
         float[] colorF = color.getColorComponents(null);
         float[] colorF2 = outlineColor.getColorComponents(null);
 
@@ -104,6 +104,31 @@ public class SCVRenderer
             outlinedBox.draw(viewMatrix, projMatrix, shader);
             VertexBuffer.unbind();
         }
+
+        finish();
+    }
+
+    public void renderLineBox(Box box, Color color)
+    {
+        setUp();
+
+        applyRegionalRenderOffset(matrixStack);
+        float[] colorF = color.getColorComponents(null);
+
+        matrixStack.translate(box.minX - regionX, box.minY,
+                box.minZ - regionZ);
+
+        matrixStack.scale((float)(box.maxX - box.minX),
+                (float)(box.maxY - box.minY), (float)(box.maxZ - box.minZ));
+
+        Matrix4f viewMatrix = matrixStack.peek().getPositionMatrix();
+        Matrix4f projMatrix = RenderSystem.getProjectionMatrix();
+        ShaderProgram shader = RenderSystem.getShader();
+
+        RenderSystem.setShaderColor(colorF[0], colorF[1], colorF[2], (color.getAlpha())/255.0F);
+        outlinedBox.bind();
+        outlinedBox.draw(viewMatrix, projMatrix, shader);
+        VertexBuffer.unbind();
 
         finish();
     }
@@ -239,13 +264,27 @@ public class SCVRenderer
 
     public void renderSlimeChunks()
     {
+        String formattedColor = (String) SlimeChunkViewer.getConfigProperty("renderColor");
+        String[] rgb = formattedColor.split(",");
+        for (String color : rgb)
+        {
+            if (Integer.parseInt(color)>255) color = "255";
+            if (Integer.parseInt(color)<0) color = "0";
+        }
+        int a = (int) SlimeChunkViewer.getConfigProperty("renderOpacity");
+        if (a>255) a=255;
+        if (a<0) a=0;
+        Color color = new Color(Integer.parseInt(rgb[0]),Integer.parseInt(rgb[1]),Integer.parseInt(rgb[2]),a);
         synchronized (SCVRenderer.slimeChunks)
         {
             for (ChunkPos c : SCVRenderer.slimeChunks)
             {
                 Vec3d start = c.getStartPos().toCenterPos().add(0, (int) SlimeChunkViewer.getConfigProperty("renderHeight"),0);
                 Vec3d end = start.add(16, 0, 16);
-                this.renderBox(new Box(start, end), new Color(48,255,33,85+30));
+
+                Box box = new Box(start, end);
+                this.renderBox(box, color);
+                renderOutline(box);
             }
         }
     }
@@ -258,8 +297,30 @@ public class SCVRenderer
             {
                 Vec3d start = c.getStartPos().toCenterPos().add(0, (int) SlimeChunkViewer.getConfigProperty("renderHeight"), 0);
                 Vec3d end = start.add(16, 0, 16);
-                this.renderBox(new Box(start, end), new Color(255, 48, 33, 85+30));
+
+                Box box = new Box(start, end);
+                this.renderBox(box, new Color(255, 48, 33, 85+30));
+                renderOutline(box);
             }
+        }
+    }
+
+    public void renderOutline(Box box)
+    {
+        if ((boolean) SlimeChunkViewer.getConfigProperty("renderOutline"))
+        {
+            String formattedOColor = (String) SlimeChunkViewer.getConfigProperty("renderOutlineColor");
+            String[] Orgb = formattedOColor.split(",");
+            for (String Ocolor : Orgb)
+            {
+                if (Integer.parseInt(Ocolor)>255) Ocolor = "255";
+                if (Integer.parseInt(Ocolor)<0) Ocolor = "0";
+            }
+            int Oa = (int) SlimeChunkViewer.getConfigProperty("renderOutlineOpacity");
+            if (Oa>255) Oa=255;
+            if (Oa<0) Oa=0;
+            Color Ocolor = new Color(Integer.parseInt(Orgb[0]),Integer.parseInt(Orgb[1]),Integer.parseInt(Orgb[2]),Oa);
+            renderLineBox(box, Ocolor);
         }
     }
 }
